@@ -9,7 +9,7 @@
     "compile": "tsc",
     "bundle": "vcst bundle rollup.config.js",
     "minify": "terser dist/index.js --compress --mangle --output dist/index.min.js",
-    "release": "npm run compile && npm run bundle && npm run minify"
+    "build": "npm run compile && npm run bundle && npm run minify"
   },
   "repository": {
     "type": "git",
