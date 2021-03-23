@@ -73,7 +73,7 @@ var utils$2 = /*#__PURE__*/Object.defineProperty({
 	toCommandValue: toCommandValue_1
 }, '__esModule', {value: true});
 
-var __importStar$1 = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
+var __importStar$2 = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
     if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
@@ -81,7 +81,7 @@ var __importStar$1 = (commonjsGlobal && commonjsGlobal.__importStar) || function
     return result;
 };
 
-const os$1 = __importStar$1(require$$0__default['default']);
+const os$1 = __importStar$2(require$$0__default['default']);
 
 /**
  * Commands
@@ -158,7 +158,7 @@ var command = /*#__PURE__*/Object.defineProperty({
 }, '__esModule', {value: true});
 
 // For internal use, subject to change.
-var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
+var __importStar$1 = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
     if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
@@ -168,8 +168,8 @@ var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (
 
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(fs_1__default['default']);
-const os = __importStar(require$$0__default['default']);
+const fs = __importStar$1(fs_1__default['default']);
+const os = __importStar$1(require$$0__default['default']);
 
 function issueCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
@@ -190,7 +190,7 @@ var fileCommand = /*#__PURE__*/Object.defineProperty({
 	issueCommand: issueCommand_1
 }, '__esModule', {value: true});
 
-var core = createCommonjsModule(function (module, exports) {
+var core$1 = createCommonjsModule(function (module, exports) {
 var __awaiter = (commonjsGlobal && commonjsGlobal.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -5894,7 +5894,7 @@ var distWeb = /*#__PURE__*/Object.freeze({
 	paginatingEndpoints: paginatingEndpoints
 });
 
-var core_1$1 = /*@__PURE__*/getAugmentedNamespace(distWeb$2);
+var core_1 = /*@__PURE__*/getAugmentedNamespace(distWeb$2);
 
 var plugin_rest_endpoint_methods_1 = /*@__PURE__*/getAugmentedNamespace(distWeb$1);
 
@@ -5936,7 +5936,7 @@ const defaults = {
         agent: Utils.getProxyAgent(baseUrl)
     }
 };
-exports.GitHub = core_1$1.Octokit.plugin(plugin_rest_endpoint_methods_1.restEndpointMethods, plugin_paginate_rest_1.paginateRest).defaults(defaults);
+exports.GitHub = core_1.Octokit.plugin(plugin_rest_endpoint_methods_1.restEndpointMethods, plugin_paginate_rest_1.paginateRest).defaults(defaults);
 /**
  * Convience function to correctly format Octokit Options to pass into the constructor.
  *
@@ -5956,7 +5956,7 @@ exports.getOctokitOptions = getOctokitOptions;
 //# sourceMappingURL=utils.js.map
 });
 
-var github = createCommonjsModule(function (module, exports) {
+var github$1 = createCommonjsModule(function (module, exports) {
 var __createBinding = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
@@ -5994,6 +5994,25 @@ exports.getOctokit = getOctokit;
 //# sourceMappingURL=github.js.map
 });
 
+var __createBinding = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (commonjsGlobal && commonjsGlobal.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (commonjsGlobal && commonjsGlobal.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -6003,17 +6022,14 @@ var __awaiter = (commonjsGlobal && commonjsGlobal.__awaiter) || function (thisAr
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (commonjsGlobal && commonjsGlobal.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 
-const core_1 = __importDefault(core);
-const github_1 = __importDefault(github);
+const core = __importStar(core$1);
+const github = __importStar(github$1);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const token = core_1.default.getInput('token') || process.env.TOKEN;
-            const octokit = github_1.default.getOctokit(token);
+            const token = core.getInput('token') || process.env.TOKEN;
+            const octokit = github.getOctokit(token);
             const { data: pullRequests } = yield octokit.pulls.list({
                 owner: 'cbsinteractive',
                 repo: 'avia-js',
@@ -6021,7 +6037,7 @@ function run() {
             console.log(pullRequests);
         }
         catch (error) {
-            core_1.default.setFailed(error.message);
+            core.setFailed(error.message);
         }
     });
 }
