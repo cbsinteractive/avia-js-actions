@@ -161,3 +161,17 @@ export async function getBranch(ref: string) {
   });
   return response.data;
 }
+
+export async function moveExistingCard(column_id: number, card_id: number) {
+  await octokit.projects.moveCard({
+    card_id,
+    position: "top",
+    column_id
+  });
+  return `Succesfully moved card #${card_id} to column #${column_id} !`;
+}
+
+
+export async function getColumnIdByName(columnName: string, projectUrl: string, id: number) {
+  return await tryGetColumnAndCardInformation(columnName, projectUrl, id);
+}
