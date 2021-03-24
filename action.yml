@@ -9,4 +9,4 @@ inputs:
     required: false
 runs:
   using: 'node12'
-  main: 'dist/index.min.js'
+  main: 'dist/index.js'
