@@ -4,6 +4,9 @@ inputs:
   token:
     description: 'A PAT'
     required: false
+  action:
+    description: 'The action to run'
+    required: false
 runs:
   using: 'node12'
   main: 'dist/index.min.js'

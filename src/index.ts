@@ -1,16 +1,11 @@
 import * as core from '@actions/core';
-import * as github from '@actions/github';
 
 async function run() {
   try {
-    const token = core.getInput('token') || process.env.TOKEN;
-    const octokit = github.getOctokit(token);
-    const { data: pullRequests } = await octokit.pulls.list({
-      owner: 'cbsinteractive',
-      repo: 'avia-js',
-    });
 
-    console.log(pullRequests);
+    const action = core.getInput('action') || process.env.ACTION || 'update-card';
+    const run = (await import(`${action}.js`)).default;
+    await run();
   }
   catch (error) {
     core.setFailed(error.message);
