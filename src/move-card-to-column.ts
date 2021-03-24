@@ -4,7 +4,7 @@ import { context } from './octokit-client';
 // const projectUrl = 'https://github.com/cbsinteractive/github-actions-test/projects/2';
 
 export default async function moveCardToColumn() {
-  console.log("moveCardToColumn", context);
+  console.log("moveCardToColumn", context.payload.pull_request);
   // const issueNumber = context.head_ref.split('/')[1];
   // console.log('ISSUE lookup: ', issueNumber, context.head_ref);
   // const card = await getCard(issueNumber, 'In Progress', projectUrl);
