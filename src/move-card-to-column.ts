@@ -1,14 +1,15 @@
 
-import { context } from './octokit-client';
+import { context, getCard, getColumnIdByName, moveExistingCard } from './octokit-client';
 
-// const projectUrl = 'https://github.com/cbsinteractive/github-actions-test/projects/2';
+const projectUrl = 'https://github.com/cbsinteractive/github-actions-test/projects/2';
 
 export default async function moveCardToColumn() {
-  console.log("moveCardToColumn", context.payload.pull_request);
-  // const issueNumber = context.head_ref.split('/')[1];
-  // console.log('ISSUE lookup: ', issueNumber, context.head_ref);
-  // const card = await getCard(issueNumber, 'In Progress', projectUrl);
-  // const toColumn = await getColumnIdByName('Ready for Review', projectUrl, null);
+  console.log("moveCardToColumn", context.payload);
+  const branch = context.payload.pull_request.head.ref;
+  const issueNumber = branch.split('/').pop();
+  console.log('ISSUE lookup: ', issueNumber, branch);
+  const card = await getCard(issueNumber, 'In Progress', projectUrl);
+  const toColumn = await getColumnIdByName('Ready for Review', projectUrl, null);
 
-  // moveExistingCard(toColumn.column_id, card.id);
+  moveExistingCard(toColumn.column_id, card.id);
 }

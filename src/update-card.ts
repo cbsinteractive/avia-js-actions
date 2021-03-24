@@ -22,7 +22,7 @@ export default async function updateCard() {
 
   switch (to.name) {
     case 'Ready for QA':
-      const card = await getCard(issue_number, to.name);
+      const card = await getCard(issue_number, to.name, 'https://github.com/cbsinteractive/github-actions-test/projects/3');
       const { column_id, id } = card;
 
       if (id === null) {

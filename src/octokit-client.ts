@@ -136,9 +136,8 @@ async function getRepoInformation(owner: string, repo: string, project: number) 
   return response;
 }
 
-export async function getCard(issue_number: number, columnName: string) {
+export async function getCard(issue_number: number, columnName: string, projectUrl: string) {
   const issue = await getIssue(issue_number);
-  const projectUrl = 'https://github.com/cbsinteractive/github-actions-test/projects/3';
   return await tryGetColumnAndCardInformation(columnName, projectUrl, issue.id);
 }
 
