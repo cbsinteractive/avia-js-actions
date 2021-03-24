@@ -8,7 +8,7 @@
     "compile": "tsc",
     "bundle": "vcst bundle rollup.config.js",
     "minify": "terser dist/index.js --compress --mangle --output dist/index.min.js",
-    "build": "npm run compile"
+    "build": "npm run compile && npm run bundle && npm run minify"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
