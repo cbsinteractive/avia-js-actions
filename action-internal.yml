@@ -1,0 +1,9 @@
+name: 'Process Card'
+description: 'Process a project card'
+inputs:
+  token:
+    description: 'A PAT'
+    required: false
+runs:
+  using: 'node12'
+  main: 'dist/index.min.js'

@@ -10,6 +10,9 @@
     "minify": "terser dist/index.js --compress --mangle --output dist/index.min.js",
     "build": "npm run compile && npm run bundle && npm run minify"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cbsinteractive/avia-js-actions.git"
