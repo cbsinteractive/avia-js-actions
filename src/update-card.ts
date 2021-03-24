@@ -3,6 +3,7 @@ import { parallel } from './utils';
 
 export default async function updateCard() {
   const card = context.payload.project_card;
+  console.log(card);
   const issue_number = card.content_url.split('/').pop();
   const issue = await getIssue(issue_number);
   const [from, to] = await parallel(
