@@ -54,67 +54,27 @@ export async function createCard(column_id: number, content_id: number, content_
   });
 }
 
-async function tryGetColumnAndCardInformation(columnName: string, projectUrl: string, issueOrPrDatabaseId: number) {
-  // if org project, we need to extract the org name
-  // if repo project, need repo owner and name
-  let column_id: number = null;
-  let id: number = null;
-  const project = parseInt(projectUrl.split('/').pop(), 10);
-
-  console.log(`This project is configured at the repo level. Repo Owner: ${owner}, repo name: ${repo}, project number #${project}`);
-
-  const repoColumnInfo: any = await getRepoInformation(owner, repo, project);
-  repoColumnInfo.repository.project.columns.nodes.forEach((columnNode: any) => {
-    const { name, databaseId, cards } = columnNode;
-    if (name == columnName) {
-      column_id = databaseId;
-    }
-
-    // check each column if there is a card that exists for the issue
-    cards.edges.forEach((card: any) => {
-      const { node } = card;
-
-      // card level
-      if (node.content != null) {
-        // only issues and pull requests have content
-        if (node.content.databaseId == issueOrPrDatabaseId) {
-          id = node.databaseId;
-        }
-      }
-    });
-  });
-
-  return { id, column_id };
-}
-
-
-async function getRepoInformation(owner: string, repo: string, project: number) {
-  // GraphQL query to get all of the columns in a project that is setup at that org level
+async function getProjectColumns(project: number) {
   // https://developer.github.com/v4/explorer/ is good to play around with
-  const response = await octokit.graphql(
+  const response: any = await octokit.graphql(
     `query ($owner: String!, $repo: String!, $project: Int!) {
       repository(owner: $owner, name: $repo) {
         project(number: $project) {
-          id
           number
-          databaseId
+          id: databaseId
           name
           url
           columns(first: 100) {
             nodes {
-              databaseId
+              id: databaseId
               name
               cards {
                 edges {
                   node {
-                    databaseId
+                    id: databaseId
                     content {
                       ... on Issue {
-                        databaseId
-                        number
-                      }
-                      ... on PullRequest {
-                        databaseId
+                        id: databaseId
                         number
                       }
                     }
@@ -133,12 +93,18 @@ async function getRepoInformation(owner: string, repo: string, project: number) 
       authorization: `bearer ${token}`
     }
   });
-  return response;
+
+  return response.repository.project.columns.nodes;
 }
 
-export async function getCard(issue_number: number, columnName: string, projectUrl: string) {
+export async function getCardByIssue(issue_number: number, project_number: number) {
   const issue = await getIssue(issue_number);
-  return await tryGetColumnAndCardInformation(columnName, projectUrl, issue.id);
+  const columns = await getProjectColumns(project_number);
+
+  const edges = columns.flatMap((column: any) => column.cards.edges);
+  const edge = edges.find((edge: any) => edge.node?.content?.id === issue.id);
+
+  return edge?.node;
 }
 
 export async function createBranch(ref: string, sha: string) {
@@ -167,10 +133,55 @@ export async function moveExistingCard(column_id: number, card_id: number) {
     position: "top",
     column_id
   });
-  return `Succesfully moved card #${card_id} to column #${column_id} !`;
+  core.info(`Successfully moved card #${card_id} to column #${column_id} !`);
 }
 
-
-export async function getColumnIdByName(columnName: string, projectUrl: string, id: number) {
-  return await tryGetColumnAndCardInformation(columnName, projectUrl, id);
+export async function getColumnByName(columnName: string, project_number: number) {
+  const columns = await getProjectColumns(project_number);
+  return columns.find((column: any) => column.name === columnName);
 }
+
+export interface Project {
+  number: number;
+  databaseId: number;
+  name: string;
+  url: string;
+};
+
+export async function getProjects() {
+  const response: any = await octokit.graphql(
+    `query($owner: String!, $repo: String!) {
+        repository(owner: $owner, name: $repo) {
+            projects(first: 10) {
+              nodes {
+                number
+                databaseId
+                name
+                url
+              }
+            }
+        }
+    }`, {
+    owner,
+    repo,
+    headers: {
+      authorization: `bearer ${token}`
+    }
+  });
+
+  return response.repository.projects.nodes as Project[];
+}
+
+export async function getProjectByName(name: string) {
+  const projects = await getProjects();
+  const project = projects.find((project: any) => project.name === name);
+  return project as Project;
+}
+
+/*
+{
+  "owner": "cbsinteractive",
+  "repo": "github-actions-test",
+  "project": 3
+}
+*/

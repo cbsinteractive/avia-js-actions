@@ -1,7 +1,13 @@
-import { addLabels, context, createBranch, createCard, getBranch, getCard, getColumn, getIssue, removeLabel } from './octokit-client';
+import core from '@actions/core';
+import { addLabels, context, createBranch, createCard, getBranch, getCardByIssue, getColumn, getColumnByName, getIssue, getProjectByName, removeLabel } from './octokit-client';
 import { parallel } from './utils';
 
 export default async function updateCard() {
+  if (!context.payload.changes) {
+    core.info('No changes detected');
+    return;
+  }
+
   const card = context.payload.project_card;
   const issue_number = card.content_url.split('/').pop();
   const issue = await getIssue(issue_number);
@@ -10,7 +16,7 @@ export default async function updateCard() {
     getColumn(card.column_id),
   );
 
-  console.log(`Changing label from '${from.name.toLowerCase()}' to '${to.name.toLowerCase()}'`);
+  core.info(`Changing label from '${from.name.toLowerCase()}' to '${to.name.toLowerCase()}'`);
 
   await parallel(
     // Remove previous label
@@ -22,13 +28,14 @@ export default async function updateCard() {
 
   switch (to.name) {
     case 'Ready for QA':
-      const card = await getCard(issue_number, to.name, 'https://github.com/cbsinteractive/github-actions-test/projects/3');
-      const { column_id, id } = card;
+      const project = await getProjectByName('QA Test Board');
+      const card = await getCardByIssue(issue_number, project.number);
 
-      if (id === null) {
-        console.log(`No card exists for the labeled Issue in the project. Attempting to create a card in column ${column_id}, for the Issue with the corresponding id #${issue.id}`);
-        await createCard(column_id, issue.id);
-        console.log(`Successfully created a new card in column #${column_id}, for the Issue with the corresponding id: ${issue.id}`);
+      if (!card) {
+        const column = await getColumnByName('Ready for Review', project.number);
+        core.info(`No card exists for the labeled Issue in the project. Attempting to create a card in column ${column.id}, for the Issue with the corresponding id #${issue.id}`);
+        await createCard(column.id, issue.id);
+        core.info(`Successfully created a new card in column #${column.id}, for the Issue with the corresponding id: ${issue.id}`);
       }
       break;
 

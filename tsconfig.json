@@ -9,10 +9,10 @@
         "noUnusedLocals": true,
         "preserveConstEnums": true,
         "removeComments": true,
-        "target": "es2015",
+        "target": "es2019",
         "outDir": "dist/",
     },
-    "files": [
-        "src/index.ts"
+    "include": [
+        "src/**/*"
     ]
 }
