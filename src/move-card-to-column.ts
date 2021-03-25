@@ -4,6 +4,7 @@ import { context, getCard, getColumnIdByName, moveExistingCard } from './octokit
 const projectUrl = 'https://github.com/cbsinteractive/github-actions-test/projects/2';
 
 export default async function moveCardToColumn() {
+  console.log(JSON.stringify(context.payload, null, 2));
   const branch = context.payload.pull_request.head.ref;
   const issueNumber = branch.split('/').pop();
   const card = await getCard(issueNumber, 'In Progress', projectUrl);
