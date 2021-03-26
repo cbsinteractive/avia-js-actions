@@ -8,5 +8,5 @@ export default async function moveCardToColumn() {
   const card = await getCardByIssue(issueNumber, project.number);
   const toColumn = await getColumnByName('Ready for Review', project.number);
 
-  moveExistingCard(toColumn.column_id, card.id);
+  moveExistingCard(toColumn.id, card.id);
 }
