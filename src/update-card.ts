@@ -1,4 +1,4 @@
-import core from '@actions/core';
+import * as core from '@actions/core';
 import { addLabels, context, createBranch, createCard, getBranch, getCardByIssue, getColumn, getColumnByName, getIssue, getProjectByName, removeLabel } from './octokit-client';
 import { parallel } from './utils';
 
