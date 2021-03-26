@@ -1,11 +1,11 @@
-import * as core from '@actions/core';
-import * as github from '@actions/github';
+import { getInput, info } from '@actions/core';
+import { context, getOctokit } from '@actions/github';
 
-const token = core.getInput('token') || process.env.TOKEN;
-const octokit = github.getOctokit(token);
-
-export const context = github.context;
+const token = getInput('token') || process.env.TOKEN;
+const octokit = getOctokit(token);
 const { owner, repo } = context.repo;
+
+export { context } from '@actions/github';
 
 export async function getColumn(column_id: number) {
   const response = await octokit.projects.getColumn({
@@ -133,7 +133,8 @@ export async function moveExistingCard(column_id: number, card_id: number) {
     position: "top",
     column_id
   });
-  core.info(`Successfully moved card #${card_id} to column #${column_id} !`);
+
+  info(`Successfully moved card #${card_id} to column #${column_id} !`);
 }
 
 export async function getColumnByName(columnName: string, project_number: number) {

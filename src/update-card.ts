@@ -1,10 +1,10 @@
-import * as core from '@actions/core';
+import { info } from '@actions/core';
 import { addLabels, context, createBranch, createCard, getBranch, getCardByIssue, getColumn, getColumnByName, getIssue, getProjectByName, removeLabel } from './octokit-client';
 import { parallel } from './utils';
 
 export default async function updateCard() {
   if (!context.payload.changes) {
-    core.info('No changes detected');
+    info('No changes detected');
     return;
   }
 
@@ -16,7 +16,7 @@ export default async function updateCard() {
     getColumn(card.column_id),
   );
 
-  core.info(`Changing label from '${from.name.toLowerCase()}' to '${to.name.toLowerCase()}'`);
+  info(`Changing label from '${from.name.toLowerCase()}' to '${to.name.toLowerCase()}'`);
 
   await parallel(
     // Remove previous label
@@ -33,9 +33,9 @@ export default async function updateCard() {
 
       if (!card) {
         const column = await getColumnByName('Ready for Review', project.number);
-        core.info(`No card exists for the labeled Issue in the project. Attempting to create a card in column ${column.id}, for the Issue with the corresponding id #${issue.id}`);
+        info(`No card exists for the labeled Issue in the project. Attempting to create a card in column ${column.id}, for the Issue with the corresponding id #${issue.id}`);
         await createCard(column.id, issue.id);
-        core.info(`Successfully created a new card in column #${column.id}, for the Issue with the corresponding id: ${issue.id}`);
+        info(`Successfully created a new card in column #${column.id}, for the Issue with the corresponding id: ${issue.id}`);
       }
       break;
 
