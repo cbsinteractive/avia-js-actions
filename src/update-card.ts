@@ -28,7 +28,7 @@ export default async function updateCard() {
 
   switch (to.name) {
     case 'Ready for QA':
-      const project = await getProjectByName('QA Test Board');
+      const project = await getProjectByName('Avia JS QA Board');
       const card = await getCardByIssue(issue_number, project.number);
 
       if (!card) {
