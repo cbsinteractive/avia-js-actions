@@ -21,7 +21,9 @@ export default async function addMilestoneToColumn() {
   }
 
   const issues = column.cards.map((card: any) => card.content);
-  console.log(issues);
+  if (!issues?.length) {
+    return;
+  }
 
   const details = { milestone: milestone.number };
   await parallel(...issues.map((issue: any) => updateIssue(issue.number, details)));
