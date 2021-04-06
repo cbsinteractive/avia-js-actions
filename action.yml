@@ -3,6 +3,12 @@ description: 'Process a project card'
 inputs:
   token:
     description: 'A PAT'
+    required: true
+  action:
+    description: 'The action to run'
+    required: true
+  column:
+    description: 'The column name'
     required: false
 runs:
   using: 'node12'

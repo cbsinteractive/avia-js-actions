@@ -1,19 +1,28 @@
 import * as core from '@actions/core';
-import * as github from '@actions/github';
+import addMilestoneToColumn from './add-milestone-to-column';
+import moveCardToColumn from './move-card-to-column';
+import updateCard from './update-card';
 
 async function run() {
   try {
-    const token = core.getInput('token') || process.env.TOKEN;
-    const octokit = github.getOctokit(token);
-    const { data: pullRequests } = await octokit.pulls.list({
-      owner: 'cbsinteractive',
-      repo: 'avia-js',
-    });
+    const action = core.getInput('action') || process.env.ACTION;
 
-    console.log(pullRequests);
+    switch (action) {
+      case 'update-card':
+        await updateCard();
+        break;
+
+      case 'move-card-to-column':
+        await moveCardToColumn();
+        break;
+
+      case 'add-milestone-to-column':
+        await addMilestoneToColumn();
+        break;
+    }
   }
   catch (error) {
-    core.setFailed(error.message);
+    core.setFailed(error);
   }
 }
 
