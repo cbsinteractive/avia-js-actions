@@ -16,6 +16,8 @@ export default async function addMilestoneToColumn() {
     return;
   }
 
+  console.log("Column", column);
+
   const issues = await getColumnIssueNumbers(column.id);
   console.log("Cards", issues);
   // const card = await getCardByIssue(issueNumber, project.number);
