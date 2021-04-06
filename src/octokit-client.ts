@@ -191,6 +191,27 @@ export async function getColumnIssueNumbers(column_id: number) {
   return cards;
 }
 
+export async function updateIssue(issue_number: number, details: any) {
+  const response = await octokit.rest.issues.update({
+    owner,
+    repo,
+    issue_number,
+    ...details
+  });
+
+  return response.data;
+}
+
+export async function getMilestoneByName(milestoneName: string) {
+  const response = await octokit.rest.issues.listMilestones({
+    owner,
+    repo,
+  });
+
+  const milestones = response.data;
+  return milestones.find((milestone: any) => milestone.name == milestoneName);
+}
+
 /*
 {
   "owner": "cbsinteractive",
