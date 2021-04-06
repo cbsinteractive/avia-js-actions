@@ -94,7 +94,11 @@ async function getProjectColumns(project: number) {
     }
   });
 
-  return response.repository.project.columns.nodes;
+  const columns = response.repository.project.columns.nodes;
+  return columns.map((column: any) => ({
+    ...column,
+    cards: column.cards.edges.nodes,
+  }));
 }
 
 export async function getCardByIssue(issue_number: number, project_number: number) {
@@ -180,7 +184,7 @@ export async function getProjectByName(name: string) {
 }
 
 export async function getColumnIssueNumbers(column_id: number) {
-  const cards = await octokit.rest.projects.listCards({
+  const cards = await octokit.projects.listCards({
     column_id,
   });
 
