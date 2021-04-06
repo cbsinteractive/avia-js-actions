@@ -1,5 +1,5 @@
 
-import { context, getColumnByName, getColumnIssueNumbers, getProjectByName } from './octokit-client';
+import { context, getColumnByName, getProjectByName } from './octokit-client';
 
 export default async function addMilestoneToColumn() {
   const { milestone: milestoneName, project: projectName, column: columnName } = context.payload.inputs;
@@ -18,8 +18,8 @@ export default async function addMilestoneToColumn() {
 
   console.log("Column", column);
 
-  const issues = await getColumnIssueNumbers(column.id);
-  console.log("Cards", issues);
+  //const issues = await getColumnIssueNumbers(column.id);
+  //console.log("Cards", issues);
   // const card = await getCardByIssue(issueNumber, project.number);
 
   // if (!card) {

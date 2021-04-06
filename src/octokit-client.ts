@@ -97,7 +97,7 @@ async function getProjectColumns(project: number) {
   const columns = response.repository.project.columns.nodes;
   return columns.map((column: any) => ({
     ...column,
-    cards: column.cards.edges.nodes,
+    cards: column.cards.edges,
   }));
 }
 
