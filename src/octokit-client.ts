@@ -209,8 +209,7 @@ export async function getMilestoneByName(milestoneName: string) {
   });
 
   const milestones = response.data;
-  console.log("MILESTONES", milestones);
-  return milestones.find((milestone: any) => milestone.name == milestoneName);
+  return milestones.find((milestone: any) => milestone.title == milestoneName);
 }
 
 /*
