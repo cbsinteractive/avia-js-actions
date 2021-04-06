@@ -179,6 +179,14 @@ export async function getProjectByName(name: string) {
   return project as Project;
 }
 
+export async function getColumnIssueNumbers(column_id: number) {
+  const cards = await octokit.rest.projects.listCards({
+    column_id,
+  });
+
+  return cards;
+}
+
 /*
 {
   "owner": "cbsinteractive",
