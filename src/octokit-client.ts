@@ -192,7 +192,7 @@ export async function getColumnIssueNumbers(column_id: number) {
 }
 
 export async function updateIssue(issue_number: number, details: any) {
-  const response = await octokit.rest.issues.update({
+  const response = await octokit.issues.update({
     owner,
     repo,
     issue_number,
@@ -203,7 +203,7 @@ export async function updateIssue(issue_number: number, details: any) {
 }
 
 export async function getMilestoneByName(milestoneName: string) {
-  const response = await octokit.rest.issues.listMilestones({
+  const response = await octokit.issues.listMilestones({
     owner,
     repo,
   });
