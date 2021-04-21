@@ -87,11 +87,6 @@ async function getProjectColumns(project: number) {
   });
 
   const columns = response.repository.project.columns.nodes;
-  info(`Columns: ${JSON.stringify(columns.map((column: any) => ({
-    ...column,
-    cards: column.cards.edges.map((edge: any) => edge.node),
-  })), null, 2)}`);
-
   return columns.map((column: any) => ({
     ...column,
     cards: column.cards.edges.map((edge: any) => edge.node),
@@ -100,11 +95,13 @@ async function getProjectColumns(project: number) {
 
 export async function getCardByIssue(issue_number: number, project_number: number) {
   const issue = await getIssue(issue_number);
+  info(`ISSUE ${JSON.stringify(issue, null, 2)}`);
   const columns = await getProjectColumns(project_number);
-
+  info(`COLUMNS ${JSON.stringify(columns, null, 2)}`);
   const edges = columns.flatMap((column: any) => column.cards.edges);
+  info(`EDGES ${JSON.stringify(edges, null, 2)}`);
   const edge = edges.find((edge: any) => edge.node?.content?.id === issue.id);
-
+  info(`EDGE ${JSON.stringify(edge, null, 2)}`);
   return edge?.node;
 }
 
