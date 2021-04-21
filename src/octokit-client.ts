@@ -87,7 +87,10 @@ async function getProjectColumns(project: number) {
   });
 
   const columns = response.repository.project.columns.nodes;
-  info(`Columns: ${JSON.stringify(columns, null, 2)}`);
+  info(`Columns: ${JSON.stringify(columns.map((column: any) => ({
+    ...column,
+    cards: column.cards.edges.map((edge: any) => edge.node),
+  })), null, 2)}`);
 
   return columns.map((column: any) => ({
     ...column,
