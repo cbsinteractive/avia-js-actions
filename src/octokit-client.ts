@@ -94,15 +94,18 @@ async function getProjectColumns(project: number) {
 }
 
 export async function getCardByIssue(issue_number: number, project_number: number) {
-  const issue = await getIssue(issue_number);
-  info(`ISSUE ${JSON.stringify(issue, null, 2)}`);
-  const columns = await getProjectColumns(project_number);
-  info(`COLUMNS ${JSON.stringify(columns, null, 2)}`);
-  const edges = columns.flatMap((column: any) => column.cards.edges);
-  info(`EDGES ${JSON.stringify(edges, null, 2)}`);
-  const edge = edges.find((edge: any) => edge.node?.content?.id === issue.id);
-  info(`EDGE ${JSON.stringify(edge, null, 2)}`);
-  return edge?.node;
+  try {
+    const issue = await getIssue(issue_number);
+    const columns = await getProjectColumns(project_number);
+    const cards = columns.flatMap((column: any) => column.cards);
+    info(`CARDS ${JSON.stringify(cards, null, 2)}`);
+    const card = cards.find((card: any) => card.content?.id === issue.id);
+    info(`CARD ${JSON.stringify(card, null, 2)}`);
+    return card;
+  }
+  catch (error) {
+    throw reportError(`Error retrieving card for issue #${issue_number}, project #${project_number}`, error);
+  }
 }
 
 export async function createBranch(ref: string, sha: string) {
