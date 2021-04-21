@@ -23,29 +23,6 @@ export async function getIssue(issue_number: number) {
   return response.data;
 }
 
-export async function removeLabel(issue_number: number, name: string) {
-  try {
-    return await octokit.issues.removeLabel({
-      owner,
-      repo,
-      issue_number,
-      name,
-    });
-  }
-  catch (error) {
-    return null;
-  }
-}
-
-export async function addLabels(issue_number: number, labels: string[]) {
-  return await octokit.issues.addLabels({
-    owner,
-    repo,
-    issue_number,
-    labels,
-  });
-}
-
 export async function createCard(column_id: number, content_id: number, content_type = 'Issue') {
   return await octokit.projects.createCard({
     column_id,
