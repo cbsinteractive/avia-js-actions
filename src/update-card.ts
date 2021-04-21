@@ -1,6 +1,5 @@
 import { info } from '@actions/core';
-import { addLabels, context, createBranch, createCard, getBranch, getCardByIssue, getColumn, getColumnByName, getIssue, getProjectByName, removeLabel } from './octokit-client';
-import { parallel } from './utils';
+import { context, createBranch, createCard, getBranch, getCardByIssue, getColumn, getColumnByName, getIssue, getProjectByName } from './octokit-client';
 
 export default async function updateCard() {
   if (!context.payload.changes) {
@@ -10,21 +9,10 @@ export default async function updateCard() {
 
   const card = context.payload.project_card;
   const issue_number = card.content_url.split('/').pop();
+
+  info(`Issue: #${issue_number}, Column: #${card.column_id}`);
   const issue = await getIssue(issue_number);
-  const [from, to] = await parallel(
-    getColumn(context.payload.changes.column_id.from),
-    getColumn(card.column_id),
-  );
-
-  info(`Changing label from '${from.name.toLowerCase()}' to '${to.name.toLowerCase()}'`);
-
-  await parallel(
-    // Remove previous label
-    removeLabel(issue_number, from.name.toLowerCase()),
-
-    // Add the new label
-    addLabels(issue_number, [to.name.toLowerCase()]),
-  );
+  const to = await getColumn(card.column_id);
 
   switch (to.name) {
     case 'Ready for QA':
@@ -41,10 +29,14 @@ export default async function updateCard() {
 
     case 'In Progress':
       const milestone = issue.milestone.title;
+
+      info(`Milestone: ${milestone}`);
+
       const release = await getBranch(`release/${milestone}`);
 
       try {
         await createBranch(`issue/${issue_number}`, release.object.sha);
+        info(`Created new branch issue/${issue_number}`);
       }
       catch (e) { }
       break;

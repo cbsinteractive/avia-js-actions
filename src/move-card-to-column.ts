@@ -1,9 +1,17 @@
 
+import { getInput, info } from '@actions/core';
 import { context, getCardByIssue, getColumnByName, getProjectByName, moveExistingCard } from './octokit-client';
 
 export default async function moveCardToColumn() {
+  const column = getInput('column');
+  info(`Move to column: ${column}`);
+
   const branch = context.payload.pull_request.head.ref;
+  info(`Pull request for branch: ${branch}`);
+
   const issueNumber = branch.split('/').pop();
+  info(`Issue number: ${issueNumber}`);
+
   const project = await getProjectByName('Avia JS Sprint Board');
   const card = await getCardByIssue(issueNumber, project.number);
 
@@ -11,7 +19,6 @@ export default async function moveCardToColumn() {
     return;
   }
 
-  const toColumn = await getColumnByName('Ready for Review', project.number);
-
+  const toColumn = await getColumnByName(column, project.number);
   moveExistingCard(toColumn.id, card.id);
 }
