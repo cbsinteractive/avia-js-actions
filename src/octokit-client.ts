@@ -4,6 +4,11 @@ import { context, getOctokit } from '@actions/github';
 const token = getInput('token') || process.env.TOKEN;
 const octokit = getOctokit(token);
 const { owner, repo } = context.repo;
+const reportError = (message: string, e: any) => {
+  error(message);
+  error(e);
+  return e;
+};
 
 export { context } from '@actions/github';
 
@@ -14,10 +19,8 @@ export async function getColumn(column_id: number) {
     });
     return response.data;
   }
-  catch (e) {
-    error(`Error retrieving column #${column_id}`);
-    error(e);
-    throw e;
+  catch (error) {
+    throw reportError(`Error retrieving column #${column_id}`, error);
   }
 }
 
@@ -30,10 +33,8 @@ export async function getIssue(issue_number: number) {
     });
     return response.data;
   }
-  catch (e) {
-    error(`Error retrieving issue #${issue_number}`);
-    error(e);
-    throw e;
+  catch (error) {
+    throw reportError(`Error retrieving issue #${issue_number}`, error);
   }
 }
 
@@ -114,12 +115,17 @@ export async function createBranch(ref: string, sha: string) {
 }
 
 export async function getBranch(ref: string) {
-  const response = await octokit.git.getRef({
-    owner,
-    repo,
-    ref: `heads/${ref}`,
-  });
-  return response.data;
+  try {
+    const response = await octokit.git.getRef({
+      owner,
+      repo,
+      ref: `heads/${ref}`,
+    });
+    return response.data;
+  }
+  catch (error) {
+    throw reportError(`Error retrieving branch #${ref}`, error);
+  }
 }
 
 export async function moveExistingCard(column_id: number, card_id: number) {
