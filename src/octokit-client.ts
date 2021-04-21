@@ -1,49 +1,41 @@
-import { getInput, info } from '@actions/core';
+import { error, getInput, info } from '@actions/core';
 import { context, getOctokit } from '@actions/github';
 
 const token = getInput('token') || process.env.TOKEN;
 const octokit = getOctokit(token);
 const { owner, repo } = context.repo;
+const reportError = (message: string, e: any) => {
+  error(message);
+  error(e);
+  return e;
+};
 
 export { context } from '@actions/github';
 
 export async function getColumn(column_id: number) {
-  const response = await octokit.projects.getColumn({
-    column_id,
-  });
-  return response.data;
+  try {
+    const response = await octokit.projects.getColumn({
+      column_id,
+    });
+    return response.data;
+  }
+  catch (error) {
+    throw reportError(`Error retrieving column #${column_id}`, error);
+  }
 }
 
 export async function getIssue(issue_number: number) {
-  const response = await octokit.issues.get({
-    owner,
-    repo,
-    issue_number,
-  });
-  return response.data;
-}
-
-export async function removeLabel(issue_number: number, name: string) {
   try {
-    return await octokit.issues.removeLabel({
+    const response = await octokit.issues.get({
       owner,
       repo,
       issue_number,
-      name,
     });
+    return response.data;
   }
   catch (error) {
-    return null;
+    throw reportError(`Error retrieving issue #${issue_number}`, error);
   }
-}
-
-export async function addLabels(issue_number: number, labels: string[]) {
-  return await octokit.issues.addLabels({
-    owner,
-    repo,
-    issue_number,
-    labels,
-  });
 }
 
 export async function createCard(column_id: number, content_id: number, content_type = 'Issue') {
@@ -102,13 +94,18 @@ async function getProjectColumns(project: number) {
 }
 
 export async function getCardByIssue(issue_number: number, project_number: number) {
-  const issue = await getIssue(issue_number);
-  const columns = await getProjectColumns(project_number);
+  try {
+    const issue = await getIssue(issue_number);
+    const columns = await getProjectColumns(project_number);
+    const cards = columns.flatMap((column: any) => column.cards);
+    const card = cards.find((card: any) => card.content?.id === issue.id);
 
-  const edges = columns.flatMap((column: any) => column.cards.edges);
-  const edge = edges.find((edge: any) => edge.node?.content?.id === issue.id);
-
-  return edge?.node;
+    info(`Card: ${card?.content?.number}`);
+    return card;
+  }
+  catch (error) {
+    throw reportError(`Error retrieving card for issue #${issue_number}, project #${project_number}`, error);
+  }
 }
 
 export async function createBranch(ref: string, sha: string) {
@@ -123,27 +120,39 @@ export async function createBranch(ref: string, sha: string) {
 }
 
 export async function getBranch(ref: string) {
-  const response = await octokit.git.getRef({
-    owner,
-    repo,
-    ref: `heads/${ref}`,
-  });
-  return response.data;
+  try {
+    const response = await octokit.git.getRef({
+      owner,
+      repo,
+      ref: `heads/${ref}`,
+    });
+    return response.data;
+  }
+  catch (error) {
+    throw reportError(`Error retrieving branch ${ref}`, error);
+  }
 }
 
 export async function moveExistingCard(column_id: number, card_id: number) {
-  await octokit.projects.moveCard({
-    card_id,
-    position: "top",
-    column_id
-  });
+  try {
+    await octokit.projects.moveCard({
+      card_id,
+      position: "top",
+      column_id
+    });
+  }
+  catch (error) {
+    throw reportError(`Could not move card #${card_id} to column #${column_id}`, error);
+  }
 
-  info(`Successfully moved card #${card_id} to column #${column_id} !`);
+  info(`Moved card #${card_id} to column #${column_id}`);
 }
 
 export async function getColumnByName(columnName: string, project_number: number) {
   const columns = await getProjectColumns(project_number);
-  return columns.find((column: any) => column.name === columnName);
+  const column = columns.find((column: any) => column.name === columnName);
+  info(`Column: ${column?.name}`);
+  return column;
 }
 
 export interface Project {
@@ -180,6 +189,8 @@ export async function getProjects() {
 export async function getProjectByName(name: string) {
   const projects = await getProjects();
   const project = projects.find((project: any) => project.name === name);
+
+  info(`Project: ${project.name}`);
   return project as Project;
 }
 
