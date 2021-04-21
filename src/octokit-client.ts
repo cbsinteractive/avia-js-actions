@@ -124,7 +124,7 @@ export async function getBranch(ref: string) {
     return response.data;
   }
   catch (error) {
-    throw reportError(`Error retrieving branch #${ref}`, error);
+    throw reportError(`Error retrieving branch ${ref}`, error);
   }
 }
 

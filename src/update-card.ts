@@ -30,7 +30,8 @@ export default async function updateCard() {
     case 'In Progress':
       const milestone = issue.milestone.title;
 
-      info(`Milestone: #${milestone}`);
+      info(`Milestone: ${milestone}`);
+
       const release = await getBranch(`release/${milestone}`);
 
       try {
