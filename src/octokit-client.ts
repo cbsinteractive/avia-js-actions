@@ -1,4 +1,4 @@
-import { getInput, info } from '@actions/core';
+import { error, getInput, info } from '@actions/core';
 import { context, getOctokit } from '@actions/github';
 
 const token = getInput('token') || process.env.TOKEN;
@@ -8,19 +8,33 @@ const { owner, repo } = context.repo;
 export { context } from '@actions/github';
 
 export async function getColumn(column_id: number) {
-  const response = await octokit.projects.getColumn({
-    column_id,
-  });
-  return response.data;
+  try {
+    const response = await octokit.projects.getColumn({
+      column_id,
+    });
+    return response.data;
+  }
+  catch (e) {
+    error(`Error retrieving column #${column_id}`);
+    error(e);
+    throw e;
+  }
 }
 
 export async function getIssue(issue_number: number) {
-  const response = await octokit.issues.get({
-    owner,
-    repo,
-    issue_number,
-  });
-  return response.data;
+  try {
+    const response = await octokit.issues.get({
+      owner,
+      repo,
+      issue_number,
+    });
+    return response.data;
+  }
+  catch (e) {
+    error(`Error retrieving issue #${issue_number}`);
+    error(e);
+    throw e;
+  }
 }
 
 export async function createCard(column_id: number, content_id: number, content_type = 'Issue') {
