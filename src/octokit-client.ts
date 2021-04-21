@@ -98,9 +98,9 @@ export async function getCardByIssue(issue_number: number, project_number: numbe
     const issue = await getIssue(issue_number);
     const columns = await getProjectColumns(project_number);
     const cards = columns.flatMap((column: any) => column.cards);
-    info(`CARDS ${JSON.stringify(cards, null, 2)}`);
     const card = cards.find((card: any) => card.content?.id === issue.id);
-    info(`CARD ${JSON.stringify(card, null, 2)}`);
+
+    info(`Card: ${card?.content?.number}`);
     return card;
   }
   catch (error) {
@@ -134,18 +134,25 @@ export async function getBranch(ref: string) {
 }
 
 export async function moveExistingCard(column_id: number, card_id: number) {
-  await octokit.projects.moveCard({
-    card_id,
-    position: "top",
-    column_id
-  });
+  try {
+    await octokit.projects.moveCard({
+      card_id,
+      position: "top",
+      column_id
+    });
+  }
+  catch (error) {
+    throw reportError(`Could not move card #${card_id} to column #${column_id}`, error);
+  }
 
-  info(`Successfully moved card #${card_id} to column #${column_id} !`);
+  info(`Moved card #${card_id} to column #${column_id}`);
 }
 
 export async function getColumnByName(columnName: string, project_number: number) {
   const columns = await getProjectColumns(project_number);
-  return columns.find((column: any) => column.name === columnName);
+  const column = columns.find((column: any) => column.name === columnName);
+  info(`Column: ${column?.name}`);
+  return column;
 }
 
 export interface Project {
@@ -182,6 +189,8 @@ export async function getProjects() {
 export async function getProjectByName(name: string) {
   const projects = await getProjects();
   const project = projects.find((project: any) => project.name === name);
+
+  info(`Project: ${project.name}`);
   return project as Project;
 }
 
