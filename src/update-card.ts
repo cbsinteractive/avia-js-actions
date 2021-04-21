@@ -36,6 +36,7 @@ export default async function updateCard() {
 
       try {
         await createBranch(`issue/${issue_number}`, release.object.sha);
+        info(`Created new branch issue/${issue_number}`);
       }
       catch (e) { }
       break;
