@@ -9,6 +9,8 @@ export default async function updateCard() {
 
   const card = context.payload.project_card;
   const issue_number = card.content_url.split('/').pop();
+
+  info(`Issue: #${issue_number}, Card: #${card.column_id}`);
   const issue = await getIssue(issue_number);
   const to = await getColumn(card.column_id);
 
