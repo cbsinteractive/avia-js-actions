@@ -20,7 +20,7 @@ export default async function updateCard() {
       const card = await getCardByIssue(issue_number, project.number);
 
       if (!card) {
-        const column = await getColumnByName('Ready for Review', project.number);
+        const column = await getColumnByName('Ready for Test', project.number);
         info(`No card exists for the labeled Issue in the project. Attempting to create a card in column ${column.id}, for the Issue with the corresponding id #${issue.id}`);
         await createCard(column.id, issue.id);
         info(`Successfully created a new card in column #${column.id}, for the Issue with the corresponding id: ${issue.id}`);
