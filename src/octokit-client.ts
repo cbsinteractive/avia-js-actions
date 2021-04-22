@@ -94,18 +94,13 @@ async function getProjectColumns(project: number) {
 }
 
 export async function getCardByIssue(issue_number: number, project_number: number) {
-  try {
-    const issue = await getIssue(issue_number);
-    const columns = await getProjectColumns(project_number);
-    const cards = columns.flatMap((column: any) => column.cards);
-    const card = cards.find((card: any) => card.content?.id === issue.id);
+  const issue = await getIssue(issue_number);
+  const columns = await getProjectColumns(project_number);
+  const cards = columns.flatMap((column: any) => column.cards);
+  const card = cards.find((card: any) => card.content?.id === issue.id);
 
-    info(`Card: ${card?.content?.number}`);
-    return card;
-  }
-  catch (error) {
-    throw reportError(`Error retrieving card for issue #${issue_number}, project #${project_number}`, error);
-  }
+  info(`Card: ${card?.content?.number}`);
+  return card;
 }
 
 export async function createBranch(ref: string, sha: string) {
