@@ -18,11 +18,7 @@ export default async function moveCardToColumn() {
 
   const project = await getProjectByName('Avia JS Sprint Board');
   const card = await getCardByIssue(issueNumber, project.number);
-
-  if (!card) {
-    return;
-  }
-
   const toColumn = await getColumnByName(column, project.number);
+
   moveExistingCard(toColumn.id, card.id);
 }

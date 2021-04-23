@@ -145,7 +145,6 @@ export async function moveExistingCard(column_id: number, card_id: number) {
 
 export async function getColumnByName(columnName: string, project_number: number) {
   const columns = await getProjectColumns(project_number);
-  info(`Columns: ${JSON.stringify(columns, null, 2)}`);
   const column = columns.find((column: any) => column.name === columnName);
   info(`Column: ${column?.name}`);
   return column;
