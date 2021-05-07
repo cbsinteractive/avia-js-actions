@@ -39,11 +39,16 @@ export async function getIssue(issue_number: number) {
 }
 
 export async function createCard(column_id: number, content_id: number, content_type = 'Issue') {
-  return await octokit.projects.createCard({
-    column_id,
-    content_id,
-    content_type
-  });
+  try {
+    return await octokit.rest.projects.createCard({
+      column_id,
+      content_id,
+      content_type,
+    });
+  }
+  catch (error) {
+    throw reportError(`Could not create card`, error);
+  }
 }
 
 async function getProjectColumns(project: number) {

@@ -10,8 +10,8 @@ inputs:
   column:
     description: 'The column name'
     required: false
-  board:
-    description: 'The board name'
+  project:
+    description: 'The project name'
     required: false
 runs:
   using: 'node12'
