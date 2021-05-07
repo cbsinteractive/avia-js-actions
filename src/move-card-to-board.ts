@@ -4,6 +4,7 @@ import { context } from './octokit-client';
 export default async function moveCardToBoard() {
   const { issue } = context.payload;
   const board = getInput('board');
+  const column = getInput('column');
 
-  info(`Moving to issue ${issue.number} board ${board}`);
+  info(`Moving issue #${issue.number} to column '${column}' of board '${board}'`);
 }

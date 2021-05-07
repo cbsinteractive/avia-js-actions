@@ -10,6 +10,9 @@ inputs:
   column:
     description: 'The column name'
     required: false
+  board:
+    description: 'The board name'
+    required: false
 runs:
   using: 'node12'
   main: 'dist/index.min.js'
