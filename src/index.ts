@@ -8,6 +8,8 @@ async function run() {
   try {
     const action = getInput('action') || process.env.ACTION;
 
+    console.log('hello world');
+
     switch (action) {
       case 'update-card':
         await updateCard();
