@@ -28,6 +28,7 @@ export default async function columnFlush() {
   }
 
   const toColumn = await getColumnByName(toColumnName, toProject.number);
+  console.log('xxx', toColumn)
   if (!toColumn){
     console.log('no to column');
     return;
@@ -41,7 +42,7 @@ export default async function columnFlush() {
 
   console.log('hello world', issues);
 
-  await parallel(...issues.map((issue: any) => moveExistingCard(toColumn.id, issue.id)));
+  await parallel(...issues.map((issue: any) => moveExistingCard(toColumn.id, issue.number)));
   
 
 
