@@ -1,4 +1,4 @@
-import { context, getColumnByName, getProjectByName, createCard } from './octokit-client';
+import { context, getColumnByName, getProjectByName, moveExistingCard, createCard } from './octokit-client';
 import { parallel } from './utils';
 
 export default async function columnFlush() {
@@ -28,9 +28,6 @@ export default async function columnFlush() {
   }
 
   const toColumn = await getColumnByName(toColumnName, toProject.number);
-  
-  //console.log('xxx', toColumn) //{ id: 13304483, name: 'Ready for Test', cards: [] }
-
   if (!toColumn){
     console.log('to column not found');
     return;
@@ -41,16 +38,26 @@ export default async function columnFlush() {
     console.log('no issues');
     return;
   }
+  
+  //TODO
+  //Check if issue is already in the TO column? 
+  //Remove project from a card?
 
-  //console.log('xxx', issues);
-  /*
-  [
-    { id: 838158920, number: 8 },
-    { id: 838158871, number: 7 },
-    { id: 823400650, number: 4 }
-  ]
-  */
 
-  await parallel(...issues.map((issue: any) => createCard(toColumn.id, issue.id)));
+  function processCardAction(issue:any) {
 
+    try {
+      createCard(toColumn.id, issue.id)
+    } catch(e) {
+      moveExistingCard(toColumn.id, issue.id);
+    }
+
+
+    //moveExistingCard - need to modify 
+  }
+
+
+  await parallel(...issues.map((issue: any) => processCardAction(issue)));
+
+  //issues.forEach? ^^
 }
