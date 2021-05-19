@@ -44,13 +44,14 @@ export default async function columnFlush() {
   //Remove project from a card?
 
 
-  function processCardAction(issue:any) {
+  async function processCardAction(issue:any) {
 
+    // this is async but running sync. change. 
     try {
-      createCard(toColumn.id, issue.id);
+      await createCard(toColumn.id, issue.id);
     } catch(e) {
       console.log('testing', toColumn.id, issue.id);
-      moveExistingCard(toColumn.id, issue.id);
+      await moveExistingCard(toColumn.id, issue.id);
     }
 
 
