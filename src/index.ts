@@ -8,15 +8,12 @@ async function run() {
   try {
     const action = getInput('action') || process.env.ACTION;
 
-    console.log('hello world');
-
     switch (action) {
       case 'update-card':
         await updateCard();
         break;
 
       case 'column-flush':
-        console.log('columnFlush!!!');
         await columnFlush();
         break;
 
