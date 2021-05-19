@@ -49,9 +49,8 @@ export default async function columnFlush() {
     // this is async but running sync. change. 
     try {
       await createCard(toColumn.id, issue.id);
-    } catch(e) {
-      console.log('testing', toColumn.id, issue.id);
-      await moveExistingCard(toColumn.id, issue.id);
+    } catch(e) {      
+      await moveExistingCard(toColumn.id, issue.number);
     }
 
 
