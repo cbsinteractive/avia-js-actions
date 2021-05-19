@@ -22,7 +22,7 @@ export default async function columnFlush() {
   }
 
   const toProject = await getProjectByName(toProjectName);
-  if (!toProject){
+  if (!toProject) {
     console.log('to project not found');
     return;
   }
@@ -47,8 +47,9 @@ export default async function columnFlush() {
   function processCardAction(issue:any) {
 
     try {
-      createCard(toColumn.id, issue.id)
+      createCard(toColumn.id, issue.id);
     } catch(e) {
+      console.log('testing', toColumn.id, issue.id);
       moveExistingCard(toColumn.id, issue.id);
     }
 
