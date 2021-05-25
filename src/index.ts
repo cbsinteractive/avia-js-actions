@@ -1,7 +1,7 @@
 import { getInput, setFailed } from '@actions/core';
 import addMilestoneToColumn from './add-milestone-to-column';
-import moveCardToBoard from './move-card-to-board';
 import moveCardToColumn from './move-card-to-column';
+import moveCardToProject from './move-card-to-project';
 import updateCard from './update-card';
 
 async function run() {
@@ -17,8 +17,8 @@ async function run() {
         await moveCardToColumn();
         break;
 
-      case 'move-card-to-board':
-        await moveCardToBoard();
+      case 'move-card-to-project':
+        await moveCardToProject();
         break;
 
       case 'add-milestone-to-column':

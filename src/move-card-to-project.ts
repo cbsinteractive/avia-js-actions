@@ -1,23 +1,16 @@
 import { getInput, info } from '@actions/core';
-import { context, getCardByIssue, getColumnByName, getProjectByName } from './octokit-client';
+import { context, createCard, getCardByIssue, getColumnByName, getProjectByName } from './octokit-client';
 
-export default async function moveCardToBoard() {
+export default async function moveCardToProject() {
   const { issue } = context.payload;
   const projectName = getInput('project');
   const columnName = getInput('column');
 
   info(`Moving issue #${issue.number} to column '${columnName}' of project '${projectName}'`);
-  info(JSON.stringify(issue));
 
   const project = await getProjectByName(projectName);
   if (!project) {
     info(`Could not find project ${project}`);
-    return;
-  }
-
-  let card = getCardByIssue(issue.number, project.number);
-  if (card) {
-    info('  Card already exists');
     return;
   }
 
@@ -27,5 +20,12 @@ export default async function moveCardToBoard() {
     return;
   }
 
-  //card = await createCard(column.id, issue.id);
+  const card = await getCardByIssue(issue.number, project.number);
+  if (card) {
+    info('  Card already exists');
+    // remove from the previous?
+    return;
+  }
+
+  await createCard(column.id, issue.id);
 }
